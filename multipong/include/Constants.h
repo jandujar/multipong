@@ -14,4 +14,6 @@
 
 #define BOLA_SIZE 10
 
+#define PACKET_SIZE 500
+
 #endif // CONSTANTS_H_INCLUDED

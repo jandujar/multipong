@@ -13,6 +13,7 @@ Red::Red()
 Red::~Red()
 {
     //dtor
+    SDLNet_FreePacket(udppacket);
 }
 
 
@@ -34,22 +35,25 @@ int Red::iniciaServidor(int port){
 
     std::cout << "Creando servidor : " << std::endl;
 
-    if(SDLNet_ResolveHost(&ip,NULL,port)==-1) {
-        std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
-        return -1;
+    //if(SDLNet_ResolveHost(&ip,NULL,port)==-1) {
+    //    std::cout << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+    //    return -1;
+    //}
+    udpsock=SDLNet_UDP_Open(port);
+    if(!udpsock) {
+        std::cout << "SDLNet_UDP_Open: " << SDLNet_GetError() << std::endl;
+        return -2;
     }
 
-    tcpsock=SDLNet_TCP_Open(&ip);
-    if(!tcpsock) {
-        std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
-        return -2;
+    if (!(udppacket = SDLNet_AllocPacket(PACKET_SIZE))) {
+        std::cout << "SDLNet_AllocPacket:" << SDLNet_GetError() << std::endl;
     }
 
     std::cout << "Servidor creado : " << std::endl;
 
     return 0;
 }
-
+/*
 int Red::esperaClientes(int nclientes, int numeroPlayers, int playerNumInicial){
     connectedClients = 0;
     int playerNum = playerNumInicial;
@@ -71,6 +75,7 @@ int Red::esperaClientes(int nclientes, int numeroPlayers, int playerNumInicial){
 
     return 0;
 }
+*/
 
 int Red::iniciaCliente(std::string host, int port){
     // connect to localhost at port 9999 using TCP (client)
@@ -81,8 +86,8 @@ int Red::iniciaCliente(std::string host, int port){
         return -1;
     }
 
-    tcpsock=SDLNet_TCP_Open(&ip);
-    if(!tcpsock) {
+    udpsock=SDLNet_UDP_Open(port);
+    if(!udpsock) {
         std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
         return -1;
     }
@@ -92,7 +97,8 @@ int Red::iniciaCliente(std::string host, int port){
     return 0;
 }
 
-int Red::envia(TCPsocket* cliente, char* msg){
+int Red::envia(UDPsocket* cliente, char* msg){
+    /*
     int len = strlen(msg)+1;
     int result=SDLNet_TCP_Send(*cliente,msg,len);
     if(result<len) {
@@ -102,11 +108,13 @@ int Red::envia(TCPsocket* cliente, char* msg){
     }
 
     //std::cout << "Envio Mensaje " << msg << std::endl;
+    */
 
     return 0;
 }
 
-int Red::recibe(TCPsocket* servidor, char * msg){
+int Red::recibe(UDPsocket* servidor, char * msg){
+    /*
     int result;
 
     //std::cout << "Esperando Respuesta : " << std::endl;
@@ -118,12 +126,12 @@ int Red::recibe(TCPsocket* servidor, char * msg){
     }else{
         //std::cout << "Mensaje recibido : " << msg << std::endl;
     }
-
+    */
     return 0;
 }
 
 int Red::clienteRecibeDatos(char* msg){
-    if(recibe(&tcpsock,msg)>=0){
+    if(recibe(&udpsock,msg)>=0){
         //Recibimos el numero de jugador
         return 0;
     }else{
@@ -132,7 +140,7 @@ int Red::clienteRecibeDatos(char* msg){
 }
 
 int Red::clienteRecibeNumeros(int *numeroJugadores, int *jugador){
-    if(recibe(&tcpsock,buffer)>=0){
+    if(recibe(&udpsock,buffer)>=0){
         sscanf(buffer,"%d %d",numeroJugadores, jugador);
         std::cout << "Numero cliente recibido "<< *jugador << std::endl;
         //Recibimos el numero de jugador
@@ -142,7 +150,8 @@ int Red::clienteRecibeNumeros(int *numeroJugadores, int *jugador){
     }
 }
 
-int Red::servidorEnviaNumeros(TCPsocket * cliente, int numeroJugadores, int numeroCliente){
+int Red::servidorEnviaNumeros(UDPsocket * cliente, int numeroJugadores, int numeroCliente){
+    /*
     sprintf(buffer,"%d %d",numeroJugadores, numeroCliente);
 
     int len = std::strlen(buffer)+1;
@@ -154,6 +163,7 @@ int Red::servidorEnviaNumeros(TCPsocket * cliente, int numeroJugadores, int nume
     }
 
     std::cout << "Envio numero cliente " << buffer << std::endl;
+    */
 
     return 0;
 }
@@ -178,6 +188,7 @@ int Red::servidorEnviaDatosATodos(char* msg){
 }
 
 int Red::clienteEnviaDireccion(int cliente, int direccion){
+    /*
     sprintf(buffer,"%d %d",cliente, direccion);
     std::cout << "Cliente envia direccion " << buffer << std::endl;
     int len = strlen(buffer)+1;
@@ -189,6 +200,7 @@ int Red::clienteEnviaDireccion(int cliente, int direccion){
     }
 
     //std::cout << "Envio Mensaje " << msg << std::endl;
+    */
 
     return 0;
 }
@@ -197,7 +209,25 @@ int Red::servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime){
     int direccion;
     int cliente;
 
-
+    if (SDLNet_UDP_Recv(udpsock, udppacket)) {
+            bool flag = false;
+        for (int i=0;i < palas.size(); i++) {
+            if (palas[i]->ipaddress.host == udppacket->address.host && palas[i]->ipaddress.port == udppacket->address.port) {
+                sscanf(udppacket->data,"%d",&direccion);
+                std::cout << "Recibimos datos en servidor: " << udppacket->data << std::endl;
+                palas[i]->Update((deltaTime,(Direcction)direccion));
+                flag = true;
+                break;
+            }
+        }
+        if (flag == false) {
+            Pala p;
+            p.Init(palas.size());
+            p.SetIP(udppacket.address);
+            palas.push_back(p);
+        }
+    }
+    /*
     for(int i=0;i<connectedClients;i++){
         if(recibe(&clientes[i],buffer)>=0){
             //Recibimos datos de un cliente
@@ -209,6 +239,7 @@ int Red::servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime){
             std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
         }
     }
+    */
 
     return 0;
 }

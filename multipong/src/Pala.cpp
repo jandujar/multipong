@@ -17,7 +17,6 @@ Pala::~Pala()
 void Pala::Init(int _player){
     int _x;
 	player = _player;
-
 	// La posición de la pala va en función del jugador
 	// Si el jugador es %2 == 0, entonces va la izquierda
 	// en caso contrario va a la derecha
@@ -69,6 +68,9 @@ void Pala::Update(float deltaTime, Direcction dir){
 
 }
 
+void Pala::SetIP(IPaddress _ip) {
+    ipaddress = _ip;
+}
 //render
 void Pala::Render(SDL_Surface* surf){
     SDL_FillRect(surf,&rect,COLOR_PALA);
