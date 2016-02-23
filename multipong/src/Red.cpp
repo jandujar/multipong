@@ -231,6 +231,7 @@ int Red::servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime, int maxC
     int cliente;
 
     if (SDLNet_UDP_Recv(udpsock, udppacket)) {
+        std::cout << "Servidor recibe datos" << (char*)udppacket->data << std::endl;
         bool flag = false;
         for (int i=0;i < palas.size(); i++) {
             if (palas[i]->ipaddress.host == udppacket->address.host && palas[i]->ipaddress.port == udppacket->address.port) {
