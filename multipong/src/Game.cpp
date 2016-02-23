@@ -26,14 +26,14 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
 
     int i;
     //Creamos las palas en funcion del numero de jugadores
-    for(i=0; i<numPlayers; i++){
-        Pala *pala = new Pala();
-        pala->Init(i);
-        palas.push_back(pala);
-    }
+    //for(i=0; i<numPlayers; i++){
+    //    Pala *pala = new Pala();
+    //    pala->Init(i);
+    //    palas.push_back(pala);
+    //}
 
     //Esperamos el número de jugadores -1 (porque nosotros somos un jugador)
-    red.esperaClientes(numPlayers - 1, numPlayers, 1);
+    //red.esperaClientes(numPlayers - 1, numPlayers, 1);
 
     //Inicio la bola
     bola.Init();
@@ -52,6 +52,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         deltaTime = (float)(currentTime - lastTime) / 1000;
         lastTime = currentTime;
 
+        red.servidorRecibeDatos(palas, deltaTime);
 
         //Inicio surface
         SDL_FillRect(sur,NULL,0);
@@ -93,7 +94,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         }
 
         //Muevo pala local (la del servidor)
-        palas[0]->Update(deltaTime,dir);
+        // palas[0]->Update(deltaTime,dir);
 
 
 
@@ -105,7 +106,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         //Render de cosas
         bola.Render(sur);
         tablero.render(sur);
-        for(i = 0; i<numPlayers;i++){
+        for(i = 0; i<(int)palas.size();i++){
             palas[i]->Render(sur);
         }
 
@@ -233,7 +234,7 @@ void Game::clienteCargaDatos(char* msg){
 
 void Game::servidorEnviaDatos(){
     char datos_enviar[MAX_BUFFER];
-    sprintf(datos_enviar,"%d %d %d %d %d %d",bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
+    //sprintf(datos_enviar,"%d %d %d %d %d %d",bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
 
-    red.servidorEnviaDatosATodos(datos_enviar);
+    //red.servidorEnviaDatosATodos(datos_enviar);
 }
