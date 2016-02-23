@@ -1,5 +1,7 @@
 #include "Game.h"
 #include <stdio.h>
+#include <iostream>
+#include <string.h>
 
 Game::Game()
 {
@@ -31,6 +33,12 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     //    pala->Init(i);
     //    palas.push_back(pala);
     //}
+    // Crep la pala para el servidor
+    Pala *pala = new Pala();
+    pala->Init(palas.size());
+    std::cout << "Pala size " << palas.size() <<std::endl;
+    palas.push_back(pala);
+    std::cout << "Pala size " << palas.size() <<std::endl;
 
     //Esperamos el número de jugadores -1 (porque nosotros somos un jugador)
     //red.esperaClientes(numPlayers - 1, numPlayers, 1);
@@ -52,7 +60,8 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         deltaTime = (float)(currentTime - lastTime) / 1000;
         lastTime = currentTime;
 
-        red.servidorRecibeDatos(palas, deltaTime);
+        //Recibo datos de los clientes
+        red.servidorRecibeDatos(palas, deltaTime, numPlayers);
 
         //Inicio surface
         SDL_FillRect(sur,NULL,0);
@@ -94,14 +103,10 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         }
 
         //Muevo pala local (la del servidor)
-        // palas[0]->Update(deltaTime,dir);
-
-
-
+        palas[0]->Update(deltaTime,dir);
 
         //Muevo Bola
         bola.Update(palas, deltaTime);
-
 
         //Render de cosas
         bola.Render(sur);
@@ -112,9 +117,6 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
 
         //Servidor envia los datos a todos los clientes
         servidorEnviaDatos();
-
-        //Recibo datos de los clientes
-        red.servidorRecibeDatos(palas, deltaTime);
 
         SDL_UpdateWindowSurface(win);
         SDL_Delay(25);
@@ -131,15 +133,17 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
     red.iniciaCliente(host, port);
 
     //Recibo el número de jugadores y el player actual
-    red.clienteRecibeNumeros(&numPlayers, &playerNumber);
+    //red.clienteRecibeNumeros(&numPlayers, &playerNumber);
 
     int i;
-    //Creamos las palas en funcion del numero de jugadores
-    for(i=0; i<numPlayers; i++){
-        Pala *pala = new Pala();
-        pala->Init(i);
-        palas.push_back(pala);
-    }
+    // Crep la pala para el cliente
+    /*
+    Pala *pala = new Pala();
+    pala->Init(palas.size());
+    std::cout << "Pala size " << palas.size() <<std::endl;
+    palas.push_back(pala);
+    std::cout << "Pala size " << palas.size() <<std::endl;
+    */
 
     //Inicio la bola
     bola.Init();
@@ -160,9 +164,9 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         lastTime = currentTime;
 
         //Recibo los datos del servidor
-        if(red.clienteRecibeDatos(msg)>=0){
-            clienteCargaDatos(msg);
-        }
+        //if(red.clienteRecibeDatos(msg)>=0){
+        //    clienteCargaDatos(msg);
+        //}
 
 
         //Inicio surface
@@ -205,7 +209,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         }
 
 
-        //Muevo pala local (la del servidor)
+        //Muevo pala local (la del cliente)
         //palas[0]->Update(deltaTime,dir);
 
         //Muevo Bola
@@ -215,12 +219,12 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         //Render de cosas
         bola.Render(sur);
         tablero.render(sur);
-        for(i = 0; i<numPlayers;i++){
+        for(i = 0; i<(int)palas.size();i++){
             palas[i]->Render(sur);
         }
 
         //Envio direccion al servidor
-        red.clienteEnviaDireccion(playerNumber, (int)dir);
+        red.clienteEnviaDireccion((int)dir);
 
         SDL_UpdateWindowSurface(win);
         SDL_Delay(25);

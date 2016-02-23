@@ -79,18 +79,25 @@ int Red::esperaClientes(int nclientes, int numeroPlayers, int playerNumInicial){
 
 int Red::iniciaCliente(std::string host, int port){
     // connect to localhost at port 9999 using TCP (client)
-    IPaddress ip;
-
-    if(SDLNet_ResolveHost(&ip,host.c_str(),port)==-1) {
+    if(SDLNet_ResolveHost(&serverIP,host.c_str(),port)==-1) {
         std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
         return -1;
     }
 
-    udpsock=SDLNet_UDP_Open(port);
+    udpsock=SDLNet_UDP_Open(port+1);
     if(!udpsock) {
         std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
         return -1;
     }
+
+    if (!(udppacket = SDLNet_AllocPacket(PACKET_SIZE))) {
+        std::cout << "SDLNet_AllocPacket:" << SDLNet_GetError() << std::endl;
+        return -1;
+    }
+
+    udppacket->address.host = serverIP.host;
+    udppacket->address.port = serverIP.port;
+
 
     //Recibir numero cliente
 
@@ -187,7 +194,21 @@ int Red::servidorEnviaDatosATodos(char* msg){
     return 0;
 }
 
-int Red::clienteEnviaDireccion(int cliente, int direccion){
+int Red::clienteEnviaDireccion(int direccion){
+
+    int numsent;
+
+    sprintf((char*)udppacket->data,"%d",direccion);
+    //int len = strlen(buffer)+1;
+    std::cout << "Cliente envia direccion " << (char*)udppacket->data << std::endl;
+
+    numsent=SDLNet_UDP_Send(udpsock, -1, udppacket);
+    if(!numsent) {
+        std::cout << "SDLNet_UDP_Send: " << SDLNet_GetError() << std::endl;
+        // do something because we failed to send
+        // this may just be because no addresses are bound to the channel...
+    }
+
     /*
     sprintf(buffer,"%d %d",cliente, direccion);
     std::cout << "Cliente envia direccion " << buffer << std::endl;
@@ -205,25 +226,25 @@ int Red::clienteEnviaDireccion(int cliente, int direccion){
     return 0;
 }
 
-int Red::servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime){
+int Red::servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime, int maxClients){
     int direccion;
     int cliente;
 
     if (SDLNet_UDP_Recv(udpsock, udppacket)) {
-            bool flag = false;
+        bool flag = false;
         for (int i=0;i < palas.size(); i++) {
             if (palas[i]->ipaddress.host == udppacket->address.host && palas[i]->ipaddress.port == udppacket->address.port) {
-                sscanf(udppacket->data,"%d",&direccion);
+                sscanf((char*)udppacket->data,"%d",&direccion);
                 std::cout << "Recibimos datos en servidor: " << udppacket->data << std::endl;
-                palas[i]->Update((deltaTime,(Direcction)direccion));
+                palas[i]->Update(deltaTime,(Direcction)direccion);
                 flag = true;
                 break;
             }
         }
-        if (flag == false) {
-            Pala p;
-            p.Init(palas.size());
-            p.SetIP(udppacket.address);
+        if (flag == false && palas.size()<maxClients) {
+            Pala* p = new Pala();
+            p->Init(palas.size());
+            p->SetIP(udppacket->address);
             palas.push_back(p);
         }
     }

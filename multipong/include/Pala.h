@@ -12,6 +12,8 @@ class Pala
         Pala();
         virtual ~Pala();
 
+        IPaddress ipaddress;
+
         //Initialization
         void Init(int player);
 
@@ -30,7 +32,6 @@ class Pala
         float speed;
         float delta;
         int player;
-        IPaddress ipaddress;
 };
 
 #endif // PALA_H
