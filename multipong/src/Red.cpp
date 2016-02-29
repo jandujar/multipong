@@ -140,9 +140,28 @@ int Red::recibe(UDPsocket* servidor, char * msg){
 int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola){
     char buffer2[MAX_BUFFER];
     int numplayers;
+    int tmp = 0;
+    int tmpx,tmpy;
     if (SDLNet_UDP_Recv(udpsock, udppacket)) {
-        sscanf((char*)udppacket->data,"%d %d %d %s",&numplayers,&bola->getRect()->x,&bola->getRect()->y,buffer2);
+        //printf("Datos leidos %s\n",(char*)udppacket->data);
+        sscanf((char*)udppacket->data,"%d %d %d",&numplayers,&bola->getRect()->x,&bola->getRect()->y);
+        while(tmp<numplayers){
+            if(tmp >= (*palas).size() ){
+                Pala* p = new Pala();
+                p->Init((*palas).size());
+                IPaddress fakeaddress;
+                fakeaddress.host = 0;
+                fakeaddress.port = 0;
+                p->SetIP(fakeaddress);
+                (*palas).push_back(p);
+            }
 
+            tmp++;
+        }
+        if(numplayers == 2){
+            //printf("Datos por leer %s",(char*)udppacket->data);
+            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,&(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y,&(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y);
+        }
         /*
         bool flag = false;
         for (int i=0;i < (*palas).size(); i++) {
@@ -205,7 +224,7 @@ int Red::servidorEnviaDatosATodos(std::vector<Pala*>* palas, char* msg){
             sprintf((char*)udppacket->data,"%s",msg);
             udppacket->len = strlen((char*)udppacket->data);
             //int len = strlen(buffer)+1;
-            std::cout << "Servidor envia DATOS " << (char*)udppacket->data << std::endl;
+            //std::cout << "Servidor envia DATOS " << (char*)udppacket->data << std::endl;
             udppacket->address.host = (*palas)[i]->ipaddress.host;
             udppacket->address.port = (*palas)[i]->ipaddress.port;
 
@@ -228,7 +247,7 @@ int Red::clienteEnviaDireccion(int direccion){
     sprintf((char*)udppacket->data,"%d",direccion);
     udppacket->len = strlen((char*)udppacket->data);
     //int len = strlen(buffer)+1;
-    std::cout << "Cliente envia direccion " << (char*)udppacket->data << std::endl;
+    //std::cout << "Cliente envia direccion " << (char*)udppacket->data << std::endl;
 
     numsent=SDLNet_UDP_Send(udpsock, -1, udppacket);
     if(!numsent) {

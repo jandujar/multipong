@@ -236,9 +236,9 @@ void Game::servidorEnviaDatos(){
     char tmp[MAX_BUFFER];
 
     if(palas.size() == 1){
-        sprintf(datos_enviar,"%d %d %d %d %d",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y);
+        sprintf(datos_enviar,"%d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y);
     }else if(palas.size()==2){
-        sprintf(datos_enviar,"%d %d %d %d %d %d %d",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
     }
     red.servidorEnviaDatosATodos(&palas, datos_enviar);
 }
