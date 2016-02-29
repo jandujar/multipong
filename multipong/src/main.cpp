@@ -62,6 +62,14 @@ int main(int argc, char* argv[]){
         return -1;
     }
     char TITLE[1024];
+    if(somosServidor){
+        sprintf(TITLE,"Multipong - Servidor");
+        std::cout << "SOMOS SERVIDOR" << SDL_GetError() << std::endl;
+    }else{
+        sprintf(TITLE,"Multipong - Cliente");
+        std::cout << "SOMOS CLIENTE" << SDL_GetError() << std::endl;
+    }
+
 
     SDL_Window *win = SDL_CreateWindow(TITLE, 100, 100, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
     if (win == nullptr){
@@ -77,7 +85,7 @@ int main(int argc, char* argv[]){
 
     //si somos servidor
     if(somosServidor){
-        game.iniciaServidorJugador(win, jugadores, 9999);
+        game.iniciaServidorJugador(win, jugadores, puerto);
     }else{
         game.iniciaCliente(win, host, puerto);
     }

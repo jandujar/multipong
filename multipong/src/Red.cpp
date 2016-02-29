@@ -199,6 +199,7 @@ int Red::clienteEnviaDireccion(int direccion){
     int numsent;
 
     sprintf((char*)udppacket->data,"%d",direccion);
+    udppacket->len = strlen((char*)udppacket->data);
     //int len = strlen(buffer)+1;
     std::cout << "Cliente envia direccion " << (char*)udppacket->data << std::endl;
 
@@ -226,27 +227,43 @@ int Red::clienteEnviaDireccion(int direccion){
     return 0;
 }
 
-int Red::servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime, int maxClients){
+int Red::servidorRecibeDatos(std::vector<Pala*>* palas, float deltaTime, int maxClients){
     int direccion;
     int cliente;
 
     if (SDLNet_UDP_Recv(udpsock, udppacket)) {
-        std::cout << "Servidor recibe datos" << (char*)udppacket->data << std::endl;
+        /*
+        char *host;
+        if(!(host=(char*)SDLNet_ResolveIP((const IPaddress*)&udppacket->address))) {
+            printf("SDLNet_ResolveIP: %s\n", SDLNet_GetError());
+        }
+        std::cout << "Servidor recibe datos " << (char*)udppacket->data << std::endl;
+        printf("%s\n", (char*)udppacket->data);
+        printf("\tFrom ip: %s\n", host);
+        printf("\tFrom port: %d\n", udppacket->address.port);
+        */
         bool flag = false;
-        for (int i=0;i < palas.size(); i++) {
-            if (palas[i]->ipaddress.host == udppacket->address.host && palas[i]->ipaddress.port == udppacket->address.port) {
+        for (int i=0;i < (*palas).size(); i++) {
+            /*if(!(host=(char*)SDLNet_ResolveIP((const IPaddress*)&(*palas)[i]->ipaddress))) {
+                printf("SDLNet_ResolveIP: %s\n", SDLNet_GetError());
+            }else{
+                printf("PALA ip: %s\n", host);
+            }
+                */
+            if ((*palas)[i]->ipaddress.host == udppacket->address.host && (*palas)[i]->ipaddress.port == udppacket->address.port) {
                 sscanf((char*)udppacket->data,"%d",&direccion);
-                std::cout << "Recibimos datos en servidor: " << udppacket->data << std::endl;
-                palas[i]->Update(deltaTime,(Direcction)direccion);
+                //std::cout << "Recibimos datos en servidor: " << udppacket->data << std::endl;
+                (*palas)[i]->Update(deltaTime,(Direcction)direccion);
                 flag = true;
                 break;
             }
         }
-        if (flag == false && palas.size()<maxClients) {
+        if (flag == false && (*palas).size()<maxClients) {
+
             Pala* p = new Pala();
-            p->Init(palas.size());
+            p->Init((*palas).size());
             p->SetIP(udppacket->address);
-            palas.push_back(p);
+            (*palas).push_back(p);
         }
     }
     /*

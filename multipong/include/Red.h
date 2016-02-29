@@ -26,7 +26,7 @@ class Red
 
         int servidorEnviaNumeros(UDPsocket * cliente, int numeroJugadores, int numeroCliente);
         int servidorEnviaDatosATodos(char* msg);
-        int servidorRecibeDatos(std::vector<Pala*> palas, float deltaTime, int maxClients);
+        int servidorRecibeDatos(std::vector<Pala*>* palas, float deltaTime, int maxClients);
 
     protected:
         char buffer[MAX_BUFFER];

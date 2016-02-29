@@ -24,7 +24,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     numPlayers = _numberPlayers;
 
     //Iniciamos el servidor
-    red.iniciaServidor(9999);
+    red.iniciaServidor(port);
 
     int i;
     //Creamos las palas en funcion del numero de jugadores
@@ -61,7 +61,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         lastTime = currentTime;
 
         //Recibo datos de los clientes
-        red.servidorRecibeDatos(palas, deltaTime, numPlayers);
+        red.servidorRecibeDatos(&palas, deltaTime, numPlayers);
 
         //Inicio surface
         SDL_FillRect(sur,NULL,0);
