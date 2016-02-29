@@ -2,6 +2,7 @@
 #define TABLERO_H
 
 #include "Pala.h"
+
 class Tablero
 {
     public:

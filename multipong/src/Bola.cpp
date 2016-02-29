@@ -13,6 +13,7 @@ Bola::Bola()
 Bola::~Bola()
 {
     //dtor
+    closeMedia();
 }
 
 //Initialization
@@ -48,6 +49,32 @@ void Bola::Init(){
 	speedY = (float)sin(angle*M_PI / 180.0f) * speed;
 
 	MAX_speed = speed *2;
+
+	InitMedia();
+}
+
+void Bola::InitMedia(){
+    //The music that will be played
+    gMusic = NULL;
+
+    //The sound effects that will be used
+    gGol = NULL;
+    gColision = NULL;
+    gNewPj = NULL;
+
+	//Initialize SDL_mixer
+    if( SDL_Init( SDL_INIT_AUDIO ) < 0 ){
+        std::cout << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
+    }
+    if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
+            std::cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
+    }
+
+    if(loadMedia()){
+        //Play the music
+        //if(Mix_PlayMusic( gMusic, -1 ))
+          //  std::cout << "Musica carregada" << std::endl;
+    }
 }
 
 //Update para la IA
@@ -60,6 +87,8 @@ void Bola::Update(std::vector<Pala*>palas, float deltaTime){
             speedX = (float)cos(angle*M_PI / 180.0f) * speed;
             speedY = (float)sin(angle*M_PI / 180.0f) * speed;
             rebotandoY = true;
+
+            //
         }
     }
 
@@ -113,7 +142,7 @@ void Bola::Update(std::vector<Pala*>palas, float deltaTime){
                 }
 
                 Rebote();
-            }
+            }else rebotandoX = false;
         }
 
 
@@ -177,6 +206,9 @@ void Bola::Gol(){
     speedY = (float)sin(angle*M_PI / 180.0f) * speed ;
 
     rebotandoY = rebotandoX =  false;
+
+    //Play sound effect.
+    Mix_PlayChannel( -1, gGol, 0 );
 }
 
 
@@ -197,4 +229,57 @@ void Bola::Rebote(){
 	speedY = (float)sin(angle*M_PI / 180.0f) * speed;
 	rebotandoX = true;
 
+	//Play sound effect.
+	Mix_PlayChannel( -1, gColision, 0 );
+}
+
+bool Bola::loadMedia(){
+    //Loading success flag
+    bool success = true;
+
+    //Load music
+    //gMusic = Mix_LoadMUS( "assets/sounds/musicPong.wav" );
+    if( gMusic == NULL ){
+        std::cout << "Failed to load beat music! SDL_mixer Error: " << Mix_GetError() << std::endl;
+        success = false;
+    }
+
+    //Load sound effects
+    gGol = Mix_LoadWAV( "assets/sounds/goalBall.wav" );
+    if( gGol == NULL ){
+        std::cout << "Failed to load beat music! SDL_mixer Error: " << Mix_GetError() << std::endl;
+        success = false;
+    }
+
+    gColision = Mix_LoadWAV( "assets/sounds/colisionBall.wav" );
+    if( gColision == NULL ){
+        std::cout << "Failed to load beat music! SDL_mixer Error: " << Mix_GetError() << std::endl;
+        success = false;
+    }
+
+    gNewPj = Mix_LoadWAV( "assets/sounds/newPlayer.wav" );
+    if( gNewPj == NULL ){
+        std::cout << "Failed to load beat music! SDL_mixer Error: " << Mix_GetError() << std::endl;
+        success = false;
+    }
+
+    return success;
+}
+
+void Bola::closeMedia(){
+    //Free the sound effects
+    Mix_FreeChunk( gGol );
+    Mix_FreeChunk( gColision );
+    Mix_FreeChunk( gNewPj );
+    gGol = NULL;
+    gColision = NULL;
+    gNewPj = NULL;
+
+    //Free the music
+    Mix_FreeMusic( gMusic );
+    gMusic = NULL;
+
+    //Quit SDL subsystems
+    Mix_Quit();
+    SDL_Quit();
 }

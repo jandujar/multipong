@@ -36,14 +36,17 @@
 			<Add directory="libs/SDL2-2.0.4/i686-w64-mingw32/include/SDL2" />
 			<Add directory="libs/SDL2_net-2.0.1/i686-w64-mingw32/include/SDL2" />
 			<Add directory="include" />
+			<Add directory="libs/SDL2_mixer-2.0.1/i686-w64-mingw32/include/SDL2" />
 		</Compiler>
 		<Linker>
-			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_net" />
+			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_net -lSDL2_mixer" />
 			<Add library="libs/SDL2-2.0.4/i686-w64-mingw32/lib/libSDL2.a" />
 			<Add library="libs/SDL2-2.0.4/i686-w64-mingw32/lib/libSDL2main.a" />
 			<Add library="libs/SDL2_net-2.0.1/i686-w64-mingw32/lib/libSDL2_net.a" />
+			<Add library="libs/SDL2_mixer-2.0.1/i686-w64-mingw32/lib/libSDL2_mixer.a" />
 			<Add directory="libs/SDL2-2.0.4/i686-w64-mingw32/lib" />
 			<Add directory="libs/SDL2_net-2.0.1/i686-w64-mingw32/lib" />
+			<Add directory="libs/SDL2_mixer-2.0.1/i686-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="include/Bola.h" />
 		<Unit filename="include/Constants.h" />

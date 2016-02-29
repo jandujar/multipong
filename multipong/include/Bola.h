@@ -3,6 +3,7 @@
 
 #include "Pala.h"
 #include <vector>
+#include <SDL_mixer.h>
 
 class Bola
 {
@@ -12,6 +13,7 @@ class Bola
 
         //Initialization
         void Init();
+        void InitMedia();
 
         //Update para la IA
         void Update(std::vector<Pala*>palas, float deltaTime);
@@ -23,8 +25,14 @@ class Bola
     protected:
 
     private:
-        void Rebote();
         void Gol();
+        void Rebote();
+
+        // Mixer.
+        Mix_Music *gMusic;
+        Mix_Chunk *gGol, *gColision, *gNewPj;
+        bool loadMedia();
+        void closeMedia();
 
         SDL_Rect rect;
         int angle;
