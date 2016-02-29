@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "Constants.h"
 #include "Pala.h"
+#include "Bola.h"
 
 class Red
 {
@@ -21,11 +22,11 @@ class Red
         int iniciaCliente(std::string host, int port);
 
         int clienteRecibeNumeros(int *numeroJugadores, int *jugador);
-        int clienteRecibeDatos(char* msg);
+        int clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola);
         int clienteEnviaDireccion(int direccion);
 
         int servidorEnviaNumeros(UDPsocket * cliente, int numeroJugadores, int numeroCliente);
-        int servidorEnviaDatosATodos(char* msg);
+        int servidorEnviaDatosATodos(std::vector<Pala*>* palas,char* msg);
         int servidorRecibeDatos(std::vector<Pala*>* palas, float deltaTime, int maxClients);
 
     protected:

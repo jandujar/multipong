@@ -36,6 +36,10 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     // Crep la pala para el servidor
     Pala *pala = new Pala();
     pala->Init(palas.size());
+    IPaddress fakeaddress;
+    fakeaddress.host=0;
+    fakeaddress.port=0;
+    pala->SetIP(fakeaddress);
     std::cout << "Pala size " << palas.size() <<std::endl;
     palas.push_back(pala);
     std::cout << "Pala size " << palas.size() <<std::endl;
@@ -164,9 +168,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         lastTime = currentTime;
 
         //Recibo los datos del servidor
-        //if(red.clienteRecibeDatos(msg)>=0){
-        //    clienteCargaDatos(msg);
-        //}
+        red.clienteRecibeDatos(&palas, &bola);
 
 
         //Inicio surface
@@ -209,13 +211,6 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         }
 
 
-        //Muevo pala local (la del cliente)
-        //palas[0]->Update(deltaTime,dir);
-
-        //Muevo Bola
-        //bola.Update(palas, deltaTime);
-
-
         //Render de cosas
         bola.Render(sur);
         tablero.render(sur);
@@ -238,7 +233,12 @@ void Game::clienteCargaDatos(char* msg){
 
 void Game::servidorEnviaDatos(){
     char datos_enviar[MAX_BUFFER];
-    //sprintf(datos_enviar,"%d %d %d %d %d %d",bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
+    char tmp[MAX_BUFFER];
 
-    //red.servidorEnviaDatosATodos(datos_enviar);
+    if(palas.size() == 1){
+        sprintf(datos_enviar,"%d %d %d %d %d",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y);
+    }else if(palas.size()==2){
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
+    }
+    red.servidorEnviaDatosATodos(&palas, datos_enviar);
 }

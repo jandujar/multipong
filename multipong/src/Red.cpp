@@ -137,12 +137,32 @@ int Red::recibe(UDPsocket* servidor, char * msg){
     return 0;
 }
 
-int Red::clienteRecibeDatos(char* msg){
-    if(recibe(&udpsock,msg)>=0){
-        //Recibimos el numero de jugador
-        return 0;
-    }else{
-        return -1;
+int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola){
+    char buffer2[MAX_BUFFER];
+    int numplayers;
+    if (SDLNet_UDP_Recv(udpsock, udppacket)) {
+        sscanf((char*)udppacket->data,"%d %d %d %s",&numplayers,&bola->getRect()->x,&bola->getRect()->y,buffer2);
+
+        /*
+        bool flag = false;
+        for (int i=0;i < (*palas).size(); i++) {
+
+            if ((*palas)[i]->ipaddress.host == udppacket->address.host && (*palas)[i]->ipaddress.port == udppacket->address.port) {
+                sscanf((char*)udppacket->data,"%d",&direccion);
+                //std::cout << "Recibimos datos en servidor: " << udppacket->data << std::endl;
+                (*palas)[i]->Update(deltaTime,(Direcction)direccion);
+                flag = true;
+                break;
+            }
+        }
+        if (flag == false && (*palas).size()<maxClients) {
+
+            Pala* p = new Pala();
+            p->Init((*palas).size());
+            p->SetIP(udppacket->address);
+            (*palas).push_back(p);
+        }
+        */
     }
 }
 
@@ -177,17 +197,24 @@ int Red::servidorEnviaNumeros(UDPsocket * cliente, int numeroJugadores, int nume
 
 
 
-int Red::servidorEnviaDatosATodos(char* msg){
+int Red::servidorEnviaDatosATodos(std::vector<Pala*>* palas, char* msg){
 
-    int len = std::strlen(msg)+1;
+    int numsent;
+    for (int i=0;i < (*palas).size(); i++) {
+        if((*palas)[i]->ipaddress.host!=0 && (*palas)[i]->ipaddress.port!=0){
+            sprintf((char*)udppacket->data,"%s",msg);
+            udppacket->len = strlen((char*)udppacket->data);
+            //int len = strlen(buffer)+1;
+            std::cout << "Servidor envia DATOS " << (char*)udppacket->data << std::endl;
+            udppacket->address.host = (*palas)[i]->ipaddress.host;
+            udppacket->address.port = (*palas)[i]->ipaddress.port;
 
-    for(int i=0; i<connectedClients; i++){
-        //std::cout << "ENVIO : " << msg << std::endl;
-        int result=SDLNet_TCP_Send(clientes[i],msg,len);
-        if(result<len) {
-            std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
-            // It may be good to disconnect sock because it is likely invalid now.
-            //return -1;
+            numsent=SDLNet_UDP_Send(udpsock, -1, udppacket);
+            if(!numsent) {
+                std::cout << "SDLNet_UDP_Send: " << SDLNet_GetError() << std::endl;
+                // do something because we failed to send
+                // this may just be because no addresses are bound to the channel...
+            }
         }
     }
 
