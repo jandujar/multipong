@@ -15,7 +15,8 @@ Game::~Game()
 
 
 void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
-    sur = SDL_GetWindowSurface(win);
+    ///sur = SDL_GetWindowSurface(win);
+    _gRenderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
     //Iniciamos conexion de red
     red.inicia();
@@ -48,9 +49,14 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     //red.esperaClientes(numPlayers - 1, numPlayers, 1);
 
     //Inicio la bola
-    bola.Init();
+    bola.Init(_gRenderer);
     //Inicio el tablero
-    tablero.init(5);
+    tablero.init(5, _gRenderer);
+    //Inicio los marcadores
+    marcador1 = new Marcador();
+    marcador1->Init(1, _gRenderer);
+    marcador2 = new Marcador();
+    marcador2->Init(2, _gRenderer);
 
     bool quit = false;
     int lastTime = SDL_GetTicks();
@@ -71,7 +77,10 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         red.servidorRecibeDatos(&palas, deltaTime, numPlayers);
 
         //Inicio surface
-        SDL_FillRect(sur,NULL,0);
+        ///SDL_FillRect(sur,NULL,0);
+        SDL_SetRenderDrawColor(_gRenderer, 0, 0, 0, 255);
+        SDL_RenderClear(_gRenderer);
+
 
 
         SDL_Event test_event;
@@ -116,15 +125,17 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
 
         //Muevo Bola
         if(palas.size() == numPlayers){
-            bola.Update(palas, deltaTime);
+			bola.Update(palas, marcador1, marcador2, deltaTime);
         }
 
         //Render de cosas
-        bola.Render(sur);
-        tablero.render(sur);
-        for(i = 0; i<(int)palas.size();i++){
-            palas[i]->Render(sur);
+        tablero.render(_gRenderer);
+        bola.Render(_gRenderer);
+        for(i = 0; i<numPlayers;i++){
+            palas[i]->Render(_gRenderer);
         }
+        marcador1->Render(_gRenderer);
+        marcador2->Render(_gRenderer);
 
         //Servidor envia los datos a todos los clientes
         if(senderTime>=SEND_TIME){
@@ -132,14 +143,16 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
             servidorEnviaDatos();
         }
 
-        SDL_UpdateWindowSurface(win);
+        ///SDL_UpdateWindowSurface(win);
+        SDL_RenderPresent(_gRenderer);
         SDL_Delay(25);
     }
 }
 
 
 void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
-    sur = SDL_GetWindowSurface(win);
+    ///sur = SDL_GetWindowSurface(win);
+    _gRenderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
     //Iniciamos conexion de red
     red.inicia();
@@ -160,9 +173,14 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
     */
 
     //Inicio la bola
-    bola.Init();
+    bola.Init(_gRenderer);
     //Inicio el tablero
-    tablero.init(5);
+    tablero.init(5, _gRenderer);
+    //Inicio los marcadores
+    marcador1 = new Marcador();
+    marcador1->Init(1, _gRenderer);
+    marcador2 = new Marcador();
+    marcador2->Init(2, _gRenderer);
 
     bool quit = false;
     int lastTime = SDL_GetTicks();
@@ -184,7 +202,9 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
 
 
         //Inicio surface
-        SDL_FillRect(sur,NULL,0);
+        ///SDL_FillRect(sur,NULL,0);
+        SDL_SetRenderDrawColor(_gRenderer, 0, 0, 0, 255);
+        SDL_RenderClear(_gRenderer);
 
 
         SDL_Event test_event;
@@ -234,11 +254,13 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
 
 
         //Render de cosas
-        bola.Render(sur);
-        tablero.render(sur);
+        tablero.render(_gRenderer);
+        bola.Render(_gRenderer);
         for(i = 0; i<(int)palas.size();i++){
-            palas[i]->Render(sur);
+            palas[i]->Render(_gRenderer);
         }
+        marcador1->Render(_gRenderer);
+        marcador2->Render(_gRenderer);
 
         //Servidor envia los datos a todos los clientes
         if(senderTime>=SEND_TIME){
@@ -248,7 +270,8 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         }
 
 
-        SDL_UpdateWindowSurface(win);
+        ///SDL_UpdateWindowSurface(win);
+        SDL_RenderPresent(_gRenderer);
         SDL_Delay(25);
     }
 }
@@ -258,13 +281,23 @@ void Game::servidorEnviaDatos(){
     char tmp[MAX_BUFFER];
 
     if(palas.size() == 1){
-        sprintf(datos_enviar,"%d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y, (int)palas[0]->direccion_pala);
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d\n",palas.size(),marcador1->getScore(), marcador2->getScore(), bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y, (int)palas[0]->direccion_pala);
     }else if(palas.size()==2){
-        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala);
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d %d %d\n",palas.size(),marcador1->getScore(), marcador2->getScore(), bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala);
     }else if(palas.size()==3){
-        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala,palas[2]->getRect()->x,palas[2]->getRect()->y, (int)palas[2]->direccion_pala);
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",palas.size(),marcador1->getScore(), marcador2->getScore(), bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala,palas[2]->getRect()->x,palas[2]->getRect()->y, (int)palas[2]->direccion_pala);
     }else if(palas.size()==4){
-        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala, palas[2]->getRect()->x,palas[2]->getRect()->y, (int)palas[2]->direccion_pala, palas[3]->getRect()->x,palas[3]->getRect()->y, (int)palas[3]->direccion_pala);
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",palas.size(),marcador1->getScore(), marcador2->getScore(), bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala, palas[2]->getRect()->x,palas[2]->getRect()->y, (int)palas[2]->direccion_pala, palas[3]->getRect()->x,palas[3]->getRect()->y, (int)palas[3]->direccion_pala);
     }
     red.servidorEnviaDatosATodos(&palas, datos_enviar);
 }
+/*
+void Game::clienteCargaDatos(char* msg){
+    int score1 = 0, score2 = 0;
+    //Que cargamos? la posicion de la bola, la posición de los jugadores x jugadores y la linea central
+    sscanf(msg,"%d %d %d %d %d %d %d %d",&bola.getRect()->x,&bola.getRect()->y,&palas[0]->getRect()->x,&palas[0]->getRect()->y,&palas[1]->getRect()->x,&palas[1]->getRect()->y, &score1, &score2);
+
+    marcador1->setScore(score1);
+    marcador2->setScore(score2);
+}
+*/

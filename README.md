@@ -8,7 +8,7 @@ ________________________________________________________________________________
 </div>
 
 
-Juego desarrollado por los alumnos de Segundo de DAM VIOD de la Escola Pia de Granollers.
+Juego desarrollado por los alumnos de Segundo de DAM VIOD de la Escola Pia de Granollers y Escola Pia Balmes.
 Se ha tratado de replicar el famoso Pong de Atari pero para más de un jugador y en línea.
 Los controles son muy simples, para mover la pala utilizaremos las flechas del teclado, hacia arriba y hacia abajo.
 

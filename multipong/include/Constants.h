@@ -15,7 +15,10 @@
 #define BOLA_SIZE 10
 
 #define PACKET_SIZE 500
-
 #define SEND_TIME 0.1
+#define MARCADOR_WIDTH 64
+#define MARCADOR_HEIGHT 64
+
+#define MAX_SCORE 99
 
 #endif // CONSTANTS_H_INCLUDED
