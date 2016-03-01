@@ -1,11 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
 
-
+#include <SDL_image.h>
 #include "Red.h"
 #include "Pala.h"
 #include "Bola.h"
 #include "Tablero.h"
+#include "Marcador.h"
 #include <vector>
 
 
@@ -25,13 +26,16 @@ class Game
 
 
         Red red;
-        SDL_Surface *sur;
+        ///SDL_Surface *sur;
+        SDL_Renderer *_gRenderer;
 
         int numPlayers;
         int playerNumber;
         std::vector<Pala*> palas;
         Bola bola;
         Tablero tablero;
+        Marcador *marcador1;
+        Marcador *marcador2;
 
 };
 

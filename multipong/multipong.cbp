@@ -36,24 +36,32 @@
 			<Add directory="libs/SDL2-2.0.4/i686-w64-mingw32/include/SDL2" />
 			<Add directory="libs/SDL2_net-2.0.1/i686-w64-mingw32/include/SDL2" />
 			<Add directory="include" />
+			<Add directory="libs/SDL2_mixer-2.0.1/i686-w64-mingw32/include/SDL2" />
+			<Add directory="libs/SDL2_image-2.0.1/i686-w64-mingw32/include/SDL2" />
 		</Compiler>
 		<Linker>
-			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_net" />
+			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_net -lSDL2_mixer -lSDL2_image" />
 			<Add library="libs/SDL2-2.0.4/i686-w64-mingw32/lib/libSDL2.a" />
 			<Add library="libs/SDL2-2.0.4/i686-w64-mingw32/lib/libSDL2main.a" />
 			<Add library="libs/SDL2_net-2.0.1/i686-w64-mingw32/lib/libSDL2_net.a" />
+			<Add library="libs/SDL2_mixer-2.0.1/i686-w64-mingw32/lib/libSDL2_mixer.a" />
+			<Add library="libs/SDL2_image-2.0.1/i686-w64-mingw32/lib/libSDL2_image.a" />
 			<Add directory="libs/SDL2-2.0.4/i686-w64-mingw32/lib" />
 			<Add directory="libs/SDL2_net-2.0.1/i686-w64-mingw32/lib" />
+			<Add directory="libs/SDL2_mixer-2.0.1/i686-w64-mingw32/lib" />
+			<Add directory="libs/SDL2_image-2.0.1/i686-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="include/Bola.h" />
 		<Unit filename="include/Constants.h" />
 		<Unit filename="include/Game.h" />
+		<Unit filename="include/Marcador.h" />
 		<Unit filename="include/Pala.h" />
 		<Unit filename="include/Red.h" />
 		<Unit filename="include/Tablero.h" />
 		<Unit filename="include/main.h" />
 		<Unit filename="src/Bola.cpp" />
 		<Unit filename="src/Game.cpp" />
+		<Unit filename="src/Marcador.cpp" />
 		<Unit filename="src/Pala.cpp" />
 		<Unit filename="src/Red.cpp" />
 		<Unit filename="src/Tablero.cpp" />
