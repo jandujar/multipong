@@ -131,7 +131,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         //Render de cosas
         tablero.render(_gRenderer);
         bola.Render(_gRenderer);
-        for(i = 0; i<numPlayers;i++){
+        for(i = 0; i<palas.size();i++){
             palas[i]->Render(_gRenderer);
         }
         marcador1->Render(_gRenderer);
