@@ -22,9 +22,9 @@ void Pala::Init(int _player){
 	// en caso contrario va a la derecha
 
 	if( (player%2) == 0){
-        _x = PALA_WIDTH + (player/2)* PALA_WIDTH;
+        _x = PALA_WIDTH + (2*player)* PALA_WIDTH;
 	}else{
-        _x = WIN_WIDTH -2*PALA_WIDTH -PALA_WIDTH*(player/2);
+        _x = WIN_WIDTH -2*PALA_WIDTH -PALA_WIDTH*(2*player);
 	}
 
 	rect.x = _x;

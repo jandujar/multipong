@@ -253,11 +253,6 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
     }
 }
 
-void Game::clienteCargaDatos(char* msg){
-    //Que cargamos? la posicion de la bola, la posición de los jugadores x jugadores y la linea central
-    sscanf(msg,"%d %d %d %d %d %d",&bola.getRect()->x,&bola.getRect()->y,&palas[0]->getRect()->x,&palas[0]->getRect()->y,&palas[1]->getRect()->x,&palas[1]->getRect()->y);
-}
-
 void Game::servidorEnviaDatos(){
     char datos_enviar[MAX_BUFFER];
     char tmp[MAX_BUFFER];
@@ -266,6 +261,10 @@ void Game::servidorEnviaDatos(){
         sprintf(datos_enviar,"%d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y, (int)palas[0]->direccion_pala);
     }else if(palas.size()==2){
         sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala);
+    }else if(palas.size()==3){
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala,palas[2]->getRect()->x,palas[2]->getRect()->y, (int)palas[2]->direccion_pala);
+    }else if(palas.size()==4){
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala, palas[2]->getRect()->x,palas[2]->getRect()->y, (int)palas[2]->direccion_pala, palas[3]->getRect()->x,palas[3]->getRect()->y, (int)palas[3]->direccion_pala);
     }
     red.servidorEnviaDatosATodos(&palas, datos_enviar);
 }

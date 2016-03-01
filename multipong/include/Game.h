@@ -20,7 +20,6 @@ class Game
     protected:
 
     private:
-        void clienteCargaDatos(char* msg);
         void servidorEnviaDatos();
 
 

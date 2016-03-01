@@ -2,6 +2,9 @@
 #include <iostream>
 #include <stdlib.h>     /* atoi */
 #include <cstring>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
 
 #define MAX_LEN 512
 
@@ -84,7 +87,11 @@ int Red::iniciaCliente(std::string host, int port){
         return -1;
     }
 
-    udpsock=SDLNet_UDP_Open(port+1);
+    srand (time(NULL));
+    int puerto = rand() % 100 + 1;
+
+    std::cout << "Puerto: " << port+puerto << std::endl;
+    udpsock=SDLNet_UDP_Open(port+puerto);
     if(!udpsock) {
         std::cout << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
         return -1;
@@ -161,6 +168,21 @@ int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola){
         if(numplayers == 2){
             //printf("Datos por leer %s",(char*)udppacket->data);
             sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,&(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y, &(*palas)[0]->direccion_pala,&(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y, &(*palas)[1]->direccion_pala);
+        }else if(numplayers == 3){
+            //printf("Datos por leer %s",(char*)udppacket->data);
+            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,
+                   &(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y, &(*palas)[0]->direccion_pala,
+                   &(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y, &(*palas)[1]->direccion_pala,
+                   &(*palas)[2]->getRect()->x,&(*palas)[2]->getRect()->y, &(*palas)[2]->direccion_pala
+                   );
+        }else if(numplayers == 4){
+            //printf("Datos por leer %s",(char*)udppacket->data);
+            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,
+                   &(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y, &(*palas)[0]->direccion_pala,
+                   &(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y, &(*palas)[1]->direccion_pala,
+                   &(*palas)[2]->getRect()->x,&(*palas)[2]->getRect()->y, &(*palas)[2]->direccion_pala,
+                   &(*palas)[3]->getRect()->x,&(*palas)[3]->getRect()->y, &(*palas)[3]->direccion_pala
+                   );
         }
         /*
         bool flag = false;
