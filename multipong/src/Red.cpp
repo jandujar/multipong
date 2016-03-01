@@ -299,7 +299,8 @@ int Red::servidorRecibeDatos(std::vector<Pala*>* palas, float deltaTime, int max
             if ((*palas)[i]->ipaddress.host == udppacket->address.host && (*palas)[i]->ipaddress.port == udppacket->address.port) {
                 sscanf((char*)udppacket->data,"%d",&direccion);
                 //std::cout << "Recibimos datos en servidor: " << udppacket->data << std::endl;
-                (*palas)[i]->Update(deltaTime,(Direcction)direccion);
+                (*palas)[i]->direccion_pala = (Direcction)direccion;
+                //(*palas)[i]->Update(deltaTime,(Direcction)direccion);
                 flag = true;
                 break;
             }

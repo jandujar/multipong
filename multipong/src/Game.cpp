@@ -81,10 +81,10 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
                     quit = true;
                 }
                 else if(tecla == SDL_SCANCODE_UP){
-                    dir = DIRECTION_UP;
+                    palas[0]->direccion_pala = DIRECTION_UP;
                 }
                 else if(tecla == SDL_SCANCODE_DOWN){
-                    dir = DIRECTION_DOWN;
+                    palas[0]->direccion_pala = DIRECTION_DOWN;
                 }
                 break;
             case SDL_KEYUP:
@@ -93,10 +93,10 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
                     quit = true;
                 }
                 else if(tecla == SDL_SCANCODE_UP){
-                    dir = DIRECTION_NONE;
+                    palas[0]->direccion_pala = DIRECTION_NONE;
                 }
                 else if(tecla == SDL_SCANCODE_DOWN){
-                    dir = DIRECTION_NONE;
+                    palas[0]->direccion_pala = DIRECTION_NONE;
                 }
                 break;
 
@@ -106,8 +106,10 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
             }
         }
 
-        //Muevo pala local (la del servidor)
-        palas[0]->Update(deltaTime,dir);
+        //Interpolo posición palas
+        for(i = 0; i<(int)palas.size();i++){
+            palas[i]->Update(deltaTime);
+        }
 
         //Muevo Bola
         bola.Update(palas, deltaTime);
@@ -167,7 +169,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         deltaTime = (float)(currentTime - lastTime) / 1000;
         lastTime = currentTime;
 
-        //Recibo los datos del servidor
+        //Recibo los datos del servidor //sobreescribo los datos por defecto
         red.clienteRecibeDatos(&palas, &bola);
 
 
@@ -209,6 +211,14 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
                 break;
             }
         }
+
+        //Interpolo posición palas
+        for(i = 0; i<(int)palas.size();i++){
+            palas[i]->Update(deltaTime);
+        }
+
+        //Interpolo posicion bolas
+        bola.Update(palas, deltaTime);
 
 
         //Render de cosas

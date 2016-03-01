@@ -37,14 +37,16 @@ void Pala::Init(int _player){
 
 	//direcciones
 	delta = 0;
+
+	direccion_pala = DIRECTION_NONE;
 }
 
 //Update para la IA
-void Pala::Update(float deltaTime, Direcction dir){
+void Pala::Update(float deltaTime){
 
-    if(dir == DIRECTION_UP){
+    if(direccion_pala == DIRECTION_UP){
         delta -= (float)deltaTime * speed * 1000;
-    }else if(dir == DIRECTION_DOWN){
+    }else if(direccion_pala == DIRECTION_DOWN){
         delta += (float)deltaTime * speed * 1000;
     }
 

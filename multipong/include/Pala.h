@@ -18,13 +18,15 @@ class Pala
         void Init(int player);
 
         //Update para la IA
-        void Update(float deltaTime, Direcction dir);
+        void Update(float deltaTime);
 
         void SetIP(IPaddress _ip);
         //render
         void Render(SDL_Surface* surf);
 
         SDL_Rect* getRect();
+
+        Direcction direccion_pala;
     protected:
 
     private:
