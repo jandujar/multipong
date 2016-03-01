@@ -16,4 +16,6 @@
 
 #define PACKET_SIZE 500
 
+#define SEND_TIME 0.1
+
 #endif // CONSTANTS_H_INCLUDED

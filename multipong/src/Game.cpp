@@ -58,11 +58,14 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     float deltaTime = 0;
 
     Direcction dir = DIRECTION_NONE;
+    float senderTime = 0;
 
     while(!quit){
         currentTime = SDL_GetTicks();
         deltaTime = (float)(currentTime - lastTime) / 1000;
         lastTime = currentTime;
+
+        senderTime+=deltaTime;
 
         //Recibo datos de los clientes
         red.servidorRecibeDatos(&palas, deltaTime, numPlayers);
@@ -122,7 +125,10 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         }
 
         //Servidor envia los datos a todos los clientes
-        servidorEnviaDatos();
+        if(senderTime>=SEND_TIME){
+            senderTime-=SEND_TIME;
+            servidorEnviaDatos();
+        }
 
         SDL_UpdateWindowSurface(win);
         SDL_Delay(25);
@@ -163,11 +169,13 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
     float deltaTime = 0;
 
     Direcction dir = DIRECTION_NONE;
-
+    float senderTime = 0;
     while(!quit){
         currentTime = SDL_GetTicks();
         deltaTime = (float)(currentTime - lastTime) / 1000;
         lastTime = currentTime;
+
+        senderTime+=deltaTime;
 
         //Recibo los datos del servidor //sobreescribo los datos por defecto
         red.clienteRecibeDatos(&palas, &bola);
@@ -228,8 +236,13 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
             palas[i]->Render(sur);
         }
 
-        //Envio direccion al servidor
-        red.clienteEnviaDireccion((int)dir);
+        //Servidor envia los datos a todos los clientes
+        if(senderTime>=SEND_TIME){
+            senderTime-=SEND_TIME;
+            //Envio direccion al servidor
+            red.clienteEnviaDireccion((int)dir);
+        }
+
 
         SDL_UpdateWindowSurface(win);
         SDL_Delay(25);
@@ -246,9 +259,9 @@ void Game::servidorEnviaDatos(){
     char tmp[MAX_BUFFER];
 
     if(palas.size() == 1){
-        sprintf(datos_enviar,"%d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y);
+        sprintf(datos_enviar,"%d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y, (int)palas[0]->direccion_pala);
     }else if(palas.size()==2){
-        sprintf(datos_enviar,"%d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,palas[1]->getRect()->x,palas[1]->getRect()->y);
+        sprintf(datos_enviar,"%d %d %d %d %d %d %d %d %d\n",palas.size(),bola.getRect()->x,bola.getRect()->y,palas[0]->getRect()->x,palas[0]->getRect()->y,(int)palas[0]->direccion_pala, palas[1]->getRect()->x,palas[1]->getRect()->y, (int)palas[1]->direccion_pala);
     }
     red.servidorEnviaDatosATodos(&palas, datos_enviar);
 }

@@ -160,7 +160,7 @@ int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola){
         }
         if(numplayers == 2){
             //printf("Datos por leer %s",(char*)udppacket->data);
-            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,&(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y,&(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y);
+            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,&(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y, &(*palas)[0]->direccion_pala,&(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y, &(*palas)[1]->direccion_pala);
         }
         /*
         bool flag = false;
