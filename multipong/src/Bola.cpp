@@ -73,8 +73,8 @@ void Bola::InitMedia(){
 
     if(loadMedia()){
         //Play the music
-        //if(Mix_PlayMusic( gMusic, -1 ))
-          //  std::cout << "Musica carregada" << std::endl;
+        if(Mix_PlayMusic( gMusic, -1 ))
+            std::cout << "Musica carregada" << std::endl;
     }
 }
 
@@ -250,7 +250,7 @@ bool Bola::loadMedia(){
     bool success = true;
 
     //Load music
-    //gMusic = Mix_LoadMUS( "assets/sounds/musicPong.wav" );
+    gMusic = Mix_LoadMUS( "assets/sounds/musicPong.wav" );
     if( gMusic == NULL ){
         std::cout << "Failed to load beat music! SDL_mixer Error: " << Mix_GetError() << std::endl;
         success = false;

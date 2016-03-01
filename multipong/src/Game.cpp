@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string.h>
 
+#define MUTE SKD
 Game::Game()
 {
     //ctor
@@ -26,6 +27,11 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
 
     //Iniciamos el servidor
     red.iniciaServidor(port);
+
+    // INICIA SONIDO ON
+    //++++
+    bool mute = false;
+    // ++++
 
     int i;
     //Creamos las palas en funcion del numero de jugadores
@@ -98,6 +104,18 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
                 else if(tecla == SDL_SCANCODE_DOWN){
                     palas[0]->direccion_pala = DIRECTION_DOWN;
                 }
+                else if(tecla == SDL_SCANCODE_M){
+                    if(!mute){
+                        mute = true;
+                        Mix_Volume(-1, 0);
+                        Mix_VolumeMusic(0);
+                    }
+                    else{
+                        mute = false;
+                        Mix_Volume(-1, 128);
+                        Mix_VolumeMusic(128);
+                    }
+                }
                 break;
             case SDL_KEYUP:
                 tecla = test_event.key.keysym.scancode;
@@ -162,6 +180,8 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
     //Recibo el número de jugadores y el player actual
     //red.clienteRecibeNumeros(&numPlayers, &playerNumber);
 
+    bool mute = false;
+
     int i;
     // Crep la pala para el cliente
     /*
@@ -221,6 +241,18 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
                 }
                 else if(tecla == SDL_SCANCODE_DOWN){
                     dir = DIRECTION_DOWN;
+                }
+                else if(tecla == SDL_SCANCODE_M){
+                    if(!mute){
+                        mute = true;
+                        Mix_Volume(-1, 0);
+                        Mix_VolumeMusic(0);
+                    }
+                    else{
+                        mute = false;
+                        Mix_Volume(-1, 128);
+                        Mix_VolumeMusic(128);
+                    }
                 }
                 break;
             case SDL_KEYUP:
