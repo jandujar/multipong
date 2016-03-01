@@ -115,7 +115,9 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         }
 
         //Muevo Bola
-        bola.Update(palas, deltaTime);
+        if(palas.size() == numPlayers){
+            bola.Update(palas, deltaTime);
+        }
 
         //Render de cosas
         bola.Render(sur);
@@ -226,7 +228,9 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         }
 
         //Interpolo posicion bolas
-        bola.Update(palas, deltaTime);
+        if(palas.size()>0){
+            bola.Update(palas, deltaTime);
+        }
 
 
         //Render de cosas
