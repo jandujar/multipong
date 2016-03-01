@@ -144,11 +144,12 @@ int Red::recibe(UDPsocket* servidor, char * msg){
     return 0;
 }
 
-int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola, SDL_Renderer* glRenderer){
+int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola, SDL_Renderer* glRenderer, Marcador* marcador1, Marcador* marcador2){
     char buffer2[MAX_BUFFER];
     int numplayers;
     int tmp = 0;
     int tmpx,tmpy;
+    int score1,score2;
     if (SDLNet_UDP_Recv(udpsock, udppacket)) {
         //printf("Datos leidos %s\n",(char*)udppacket->data);
         sscanf((char*)udppacket->data,"%d %d %d",&numplayers,&bola->getRect()->x,&bola->getRect()->y);
@@ -167,23 +168,32 @@ int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola, SDL_Renderer*
         }
         if(numplayers == 2){
             //printf("Datos por leer %s",(char*)udppacket->data);
-            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,&(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y, &(*palas)[0]->direccion_pala,&(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y, &(*palas)[1]->direccion_pala);
+            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d %d %d\n",&numplayers,&score1,&score2,&bola->getRect()->x,&bola->getRect()->y,&(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y, &(*palas)[0]->direccion_pala,&(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y, &(*palas)[1]->direccion_pala);
+            marcador1->setScore(score1);
+            marcador2->setScore(score2);
         }else if(numplayers == 3){
             //printf("Datos por leer %s",(char*)udppacket->data);
-            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,
+            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",&numplayers,&score1,&score2,&bola->getRect()->x,&bola->getRect()->y,
                    &(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y, &(*palas)[0]->direccion_pala,
                    &(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y, &(*palas)[1]->direccion_pala,
                    &(*palas)[2]->getRect()->x,&(*palas)[2]->getRect()->y, &(*palas)[2]->direccion_pala
                    );
+            marcador1->setScore(score1);
+            marcador2->setScore(score2);
+
         }else if(numplayers == 4){
             //printf("Datos por leer %s",(char*)udppacket->data);
-            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",&numplayers,&bola->getRect()->x,&bola->getRect()->y,
+            sscanf((char*)udppacket->data,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",&numplayers,&score1,&score2,&bola->getRect()->x,&bola->getRect()->y,
                    &(*palas)[0]->getRect()->x,&(*palas)[0]->getRect()->y, &(*palas)[0]->direccion_pala,
                    &(*palas)[1]->getRect()->x,&(*palas)[1]->getRect()->y, &(*palas)[1]->direccion_pala,
                    &(*palas)[2]->getRect()->x,&(*palas)[2]->getRect()->y, &(*palas)[2]->direccion_pala,
                    &(*palas)[3]->getRect()->x,&(*palas)[3]->getRect()->y, &(*palas)[3]->direccion_pala
                    );
+           marcador1->setScore(score1);
+           marcador2->setScore(score2);
         }
+
+
         /*
         bool flag = false;
         for (int i=0;i < (*palas).size(); i++) {

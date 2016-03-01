@@ -198,7 +198,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         senderTime+=deltaTime;
 
         //Recibo los datos del servidor //sobreescribo los datos por defecto
-        red.clienteRecibeDatos(&palas, &bola,_gRenderer);
+        red.clienteRecibeDatos(&palas, &bola,_gRenderer,marcador1,marcador2);
 
 
         //Inicio surface
