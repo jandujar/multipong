@@ -8,54 +8,85 @@
 
 int main(int argc, char* argv[]){
 
-    if(argc < 3)
+    bool somosServidor = false;
+    bool valoresDef = false;
+    int jugadores = 0;
+    int i = 0;
+    std::string host = "";
+    int puerto;
+
+    if(argc == 2)
+    {
+        std::cout << "Argumentos 1" << std::endl;
+        if(strcmp(argv[1], "-s") == 0){
+
+            somosServidor = true;
+            valoresDef = true;
+        }
+        else if(strcmp(argv[1], "-c") == 0)
+        {
+            valoresDef = true;
+            somosServidor = false;
+        }
+        else return -1;
+    }
+
+    else if(argc < 3)
     {
         return -1;
 
     }
-    bool somosServidor = false;
-    int jugadores = 0;
-    int i = 0;
-    std::string host = " ";
-    int puerto;
-    while(i < argc)
+    else if(argc == 3)
     {
-        if(strcmp(argv[i], "-s") == 0){
-            i++;
-            somosServidor = true;
-        }else if(strcmp(argv[i], "-j") == 0){
-            int tempJug;
-
-            if(sscanf(argv[i+1], "%d", &tempJug) == 1)
+        while(i < argc)
+        {
+            if(strcmp(argv[i], "-s") == 0){
+                i++;
+                somosServidor = true;
+            }
+            else if(strcmp(argv[i], "-j") == 0)
             {
-                if(tempJug > 1 && tempJug < 11)
+                int tempJug;
+
+                if(sscanf(argv[i+1], "%d", &tempJug) == 1)
                 {
-                    jugadores = tempJug;
-                    i+=2;
-                }
-                else{
+                    if(tempJug > 1 && tempJug < 11)
+                    {
+                        jugadores = tempJug;
+                        i+=2;
+                    }
+                    else
+                    {
                     std::cout << "los jugadores estan mal" << std::endl;
                     return -1;
+                    }
                 }
             }
-        }else if(strcmp(argv[i], "-c") == 0)
-        {
-            host = argv[i+1];
-            somosServidor = false;
-            i+=2;
-        }else if(strcmp(argv[i], "-p") == 0)
-        {
-            int tempPort;
-            sscanf(argv[i+1], "%d", &tempPort);
-            if(tempPort != -1)
+            else if(strcmp(argv[i], "-c") == 0)
             {
-               puerto = tempPort;
+                host = argv[i+1];
+                somosServidor = false;
+                i+=2;
+            }else if(strcmp(argv[i], "-p") == 0)
+            {
+                int tempPort;
+                sscanf(argv[i+1], "%d", &tempPort);
+                if(tempPort != -1)
+                {
+                    puerto = tempPort;
+                }
+                i+=2;
             }
-            i+=2;
+            else{
+                i++;
+            }
         }
-        else{
-            i++;
-        }
+    }
+
+    if(valoresDef){
+        jugadores = 2;
+        host = "localhost";
+        puerto = 9999;
     }
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0){
