@@ -36,7 +36,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
     //}
     // Crep la pala para el servidor
     Pala *pala = new Pala();
-    pala->Init(palas.size());
+    pala->Init(palas.size(),_gRenderer);
     IPaddress fakeaddress;
     fakeaddress.host=0;
     fakeaddress.port=0;
@@ -74,7 +74,7 @@ void Game::iniciaServidorJugador(SDL_Window *win, int _numberPlayers, int port){
         senderTime+=deltaTime;
 
         //Recibo datos de los clientes
-        red.servidorRecibeDatos(&palas, deltaTime, numPlayers);
+        red.servidorRecibeDatos(&palas, deltaTime, numPlayers, _gRenderer);
 
         //Inicio surface
         ///SDL_FillRect(sur,NULL,0);
@@ -198,7 +198,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         senderTime+=deltaTime;
 
         //Recibo los datos del servidor //sobreescribo los datos por defecto
-        red.clienteRecibeDatos(&palas, &bola);
+        red.clienteRecibeDatos(&palas, &bola,_gRenderer);
 
 
         //Inicio surface
@@ -249,7 +249,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
 
         //Interpolo posicion bolas
         if(palas.size()>0){
-            bola.Update(palas, deltaTime);
+            bola.Update(palas, marcador1, marcador2, deltaTime);
         }
 
 

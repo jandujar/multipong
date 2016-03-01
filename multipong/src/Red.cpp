@@ -144,7 +144,7 @@ int Red::recibe(UDPsocket* servidor, char * msg){
     return 0;
 }
 
-int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola){
+int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola, SDL_Renderer* glRenderer){
     char buffer2[MAX_BUFFER];
     int numplayers;
     int tmp = 0;
@@ -155,7 +155,7 @@ int Red::clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola){
         while(tmp<numplayers){
             if(tmp >= (*palas).size() ){
                 Pala* p = new Pala();
-                p->Init((*palas).size());
+                p->Init((*palas).size(),glRenderer);
                 IPaddress fakeaddress;
                 fakeaddress.host = 0;
                 fakeaddress.port = 0;
@@ -295,7 +295,7 @@ int Red::clienteEnviaDireccion(int direccion){
     return 0;
 }
 
-int Red::servidorRecibeDatos(std::vector<Pala*>* palas, float deltaTime, int maxClients){
+int Red::servidorRecibeDatos(std::vector<Pala*>* palas, float deltaTime, int maxClients, SDL_Renderer* glRenderer){
     int direccion;
     int cliente;
 
@@ -330,7 +330,7 @@ int Red::servidorRecibeDatos(std::vector<Pala*>* palas, float deltaTime, int max
         if (flag == false && (*palas).size()<maxClients) {
 
             Pala* p = new Pala();
-            p->Init((*palas).size());
+            p->Init((*palas).size(),glRenderer);
             p->SetIP(udppacket->address);
             (*palas).push_back(p);
         }
