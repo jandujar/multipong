@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include "Pala.h"
 #include "Bola.h"
+#include "Marcador.h"
 
 class Red
 {
@@ -22,7 +23,7 @@ class Red
         int iniciaCliente(std::string host, int port);
 
         int clienteRecibeNumeros(int *numeroJugadores, int *jugador);
-        int clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola, SDL_Renderer* glRenderer);
+        int clienteRecibeDatos(std::vector<Pala*>* palas, Bola* bola, SDL_Renderer* glRenderer, Marcador* marcador1, Marcador* marcador2);
         int clienteEnviaDireccion(int direccion);
 
         int servidorEnviaNumeros(UDPsocket * cliente, int numeroJugadores, int numeroCliente);

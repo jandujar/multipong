@@ -248,7 +248,7 @@ void Game::iniciaCliente(SDL_Window *win, std::string host, int port){
         }
 
         //Interpolo posicion bolas
-        if(palas.size()>0){
+        if(palas.size()==numPlayers){
             bola.Update(palas, marcador1, marcador2, deltaTime);
         }
 

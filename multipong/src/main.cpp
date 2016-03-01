@@ -36,7 +36,7 @@ int main(int argc, char* argv[]){
         return -1;
 
     }
-    else if(argc == 3)
+    else if(argc >= 3)
     {
         while(i < argc)
         {

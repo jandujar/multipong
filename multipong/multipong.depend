@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1456242421 source:d:\jandujar\multipong\multipong\src\main.cpp
+1456855162 source:d:\jandujar\multipong\multipong\src\main.cpp
 	<SDL.h>
 	<stdio.h>
 	<iostream>
@@ -8,7 +8,7 @@
 	"Game.h"
 	"Constants.h"
 
-1456841678 d:\jandujar\multipong\multipong\include\red.h
+1456855472 d:\jandujar\multipong\multipong\include\red.h
 	"SDL_net.h"
 	<vector>
 	<string.h>
@@ -16,12 +16,16 @@
 	<stdio.h>
 	"Constants.h"
 	"Pala.h"
+	"Bola.h"
+	"Marcador.h"
 
-1456841678 source:d:\jandujar\multipong\multipong\src\red.cpp
+1456855628 source:d:\jandujar\multipong\multipong\src\red.cpp
 	"Red.h"
 	<iostream>
 	<stdlib.h>
 	<cstring>
+	<stdlib.h>
+	<time.h>
 
 1456094465 source:c:\users\jandujar\desktop\multipong\multipong\src\red.cpp
 	"Red.h"
@@ -1937,19 +1941,20 @@
 	"begin_code.h"
 	"close_code.h"
 
-1456841722 d:\jandujar\multipong\multipong\include\constants.h
+1456854493 d:\jandujar\multipong\multipong\include\constants.h
 
-1456841722 d:\jandujar\multipong\multipong\include\pala.h
+1456854520 d:\jandujar\multipong\multipong\include\pala.h
 	<SDL.h>
+	"SDL_net.h"
 	<SDL_image.h>
 
-1456841722 d:\jandujar\multipong\multipong\libs\sdl2_image-2.0.1\i686-w64-mingw32\include\sdl2\sdl_image.h
+1456854438 d:\jandujar\multipong\multipong\libs\sdl2_image-2.0.1\i686-w64-mingw32\include\sdl2\sdl_image.h
 	"SDL.h"
 	"SDL_version.h"
 	"begin_code.h"
 	"close_code.h"
 
-1456841722 d:\jandujar\multipong\multipong\include\game.h
+1456854438 d:\jandujar\multipong\multipong\include\game.h
 	<SDL_image.h>
 	"Red.h"
 	"Pala.h"
@@ -1958,17 +1963,17 @@
 	"Marcador.h"
 	<vector>
 
-1456841722 d:\jandujar\multipong\multipong\include\bola.h
+1456854438 d:\jandujar\multipong\multipong\include\bola.h
 	"Pala.h"
 	"Marcador.h"
 	<vector>
 	<SDL_mixer.h>
 
-1456841722 d:\jandujar\multipong\multipong\include\marcador.h
+1456854438 d:\jandujar\multipong\multipong\include\marcador.h
 	<SDL.h>
 	<SDL_image.h>
 
-1456841722 d:\jandujar\multipong\multipong\libs\sdl2_mixer-2.0.1\i686-w64-mingw32\include\sdl2\sdl_mixer.h
+1456844994 d:\jandujar\multipong\multipong\libs\sdl2_mixer-2.0.1\i686-w64-mingw32\include\sdl2\sdl_mixer.h
 	"SDL_stdinc.h"
 	"SDL_rwops.h"
 	"SDL_audio.h"
@@ -1977,29 +1982,35 @@
 	"begin_code.h"
 	"close_code.h"
 
-1456841722 d:\jandujar\multipong\multipong\include\tablero.h
+1456854438 d:\jandujar\multipong\multipong\include\tablero.h
 	"Pala.h"
 
-1456841722 source:d:\jandujar\multipong\multipong\src\bola.cpp
+1456854438 source:d:\jandujar\multipong\multipong\src\bola.cpp
 	"Bola.h"
 	<stdlib.h>
 	<math.h>
 	"Constants.h"
 	<iostream>
 
-1456841722 source:d:\jandujar\multipong\multipong\src\game.cpp
+1456855318 source:d:\jandujar\multipong\multipong\src\game.cpp
 	"Game.h"
 	<stdio.h>
+	<iostream>
+	<string.h>
 
-1456841722 source:d:\jandujar\multipong\multipong\src\pala.cpp
+1456854438 source:d:\jandujar\multipong\multipong\src\pala.cpp
 	"Pala.h"
 	"Constants.h"
 	"math.h"
 
-1456841722 source:d:\jandujar\multipong\multipong\src\tablero.cpp
+1456854438 source:d:\jandujar\multipong\multipong\src\tablero.cpp
 	"Tablero.h"
 	<stdlib.h>
 	<math.h>
 	"Constants.h"
 	<iostream>
+
+1456854438 source:d:\jandujar\multipong\multipong\src\marcador.cpp
+	"Marcador.h"
+	"Constants.h"
 
