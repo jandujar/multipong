@@ -796,20 +796,22 @@
 	"Constants.h"
 	<iostream>
 
-1456252331 source:d:\llllllll\ad\multipong\multipong\src\bola.cpp
+1456846807 source:d:\llllllll\ad\multipong\multipong\src\bola.cpp
 	"Bola.h"
 	<stdlib.h>
 	<math.h>
 	"Constants.h"
 	<iostream>
 
-1456252036 d:\llllllll\ad\multipong\multipong\include\bola.h
+1456844597 d:\llllllll\ad\multipong\multipong\include\bola.h
 	"Pala.h"
+	"Marcador.h"
 	<vector>
 	<SDL_mixer.h>
 
-1456246868 d:\llllllll\ad\multipong\multipong\include\pala.h
+1456844597 d:\llllllll\ad\multipong\multipong\include\pala.h
 	<SDL.h>
+	<SDL_image.h>
 
 1456243550 d:\llllllll\ad\multipong\multipong\libs\sdl2-2.0.4\i686-w64-mingw32\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -1139,17 +1141,19 @@
 	"begin_code.h"
 	"close_code.h"
 
-1456243550 d:\llllllll\ad\multipong\multipong\include\constants.h
+1456844597 d:\llllllll\ad\multipong\multipong\include\constants.h
 
-1456243551 source:d:\llllllll\ad\multipong\multipong\src\game.cpp
+1456847862 source:d:\llllllll\ad\multipong\multipong\src\game.cpp
 	"Game.h"
 	<stdio.h>
 
-1456246868 d:\llllllll\ad\multipong\multipong\include\game.h
+1456847686 d:\llllllll\ad\multipong\multipong\include\game.h
+	<SDL_image.h>
 	"Red.h"
 	"Pala.h"
 	"Bola.h"
 	"Tablero.h"
+	"Marcador.h"
 	<vector>
 
 1456243550 d:\llllllll\ad\multipong\multipong\include\red.h
@@ -1169,7 +1173,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1456246868 d:\llllllll\ad\multipong\multipong\include\tablero.h
+1456844597 d:\llllllll\ad\multipong\multipong\include\tablero.h
 	"Pala.h"
 
 1456249638 source:d:\llllllll\ad\multipong\multipong\src\main.cpp
@@ -1181,7 +1185,7 @@
 	"Game.h"
 	"Constants.h"
 
-1456243551 source:d:\llllllll\ad\multipong\multipong\src\pala.cpp
+1456844598 source:d:\llllllll\ad\multipong\multipong\src\pala.cpp
 	"Pala.h"
 	"Constants.h"
 	"math.h"
@@ -1192,7 +1196,7 @@
 	<stdlib.h>
 	<cstring>
 
-1456243551 source:d:\llllllll\ad\multipong\multipong\src\tablero.cpp
+1456844598 source:d:\llllllll\ad\multipong\multipong\src\tablero.cpp
 	"Tablero.h"
 	<stdlib.h>
 	<math.h>
@@ -2002,4 +2006,18 @@
 	<math.h>
 	"Constants.h"
 	<iostream>
+
+1456844598 d:\llllllll\ad\multipong\multipong\libs\sdl2_image-2.0.1\i686-w64-mingw32\include\sdl2\sdl_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1456844597 d:\llllllll\ad\multipong\multipong\include\marcador.h
+	<SDL.h>
+	<SDL_image.h>
+
+1456844598 source:d:\llllllll\ad\multipong\multipong\src\marcador.cpp
+	"Marcador.h"
+	"Constants.h"
 
